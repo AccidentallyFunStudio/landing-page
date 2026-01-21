@@ -24,7 +24,7 @@ const Contact: React.FC = () => {
           <div className="flex flex-col justify-between">
             <div>
               <h2 className="font-display font-medium text-5xl md:text-6xl mb-8 text-brand-black">
-                Ready to make a scene?
+                Ready to make something fun?
               </h2>
               <p className="text-gray-500 text-lg mb-12 max-w-md leading-relaxed font-light">
                 Tell us about your project. Whether it's a napkin sketch or a 50-page GDD, we're ready to add the fun factor.
