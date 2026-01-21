@@ -15,9 +15,9 @@ const Footer: React.FC = () => {
           </div>
 
           <div className="flex gap-8">
-            <a href="#" className="text-gray-400 hover:text-brand-black transition-colors text-sm font-medium">Twitter</a>
-            <a href="#" className="text-gray-400 hover:text-brand-black transition-colors text-sm font-medium">LinkedIn</a>
-            <a href="#" className="text-gray-400 hover:text-brand-black transition-colors text-sm font-medium">Instagram</a>
+            <a href="https://instagram.com/accidentallyfun.id" className="text-gray-400 hover:text-brand-black transition-colors text-sm font-medium">Twitter</a>
+            <a href="https://instagram.com/accidentallyfun.id" className="text-gray-400 hover:text-brand-black transition-colors text-sm font-medium">LinkedIn</a>
+            <a href="https://instagram.com/accidentallyfun.id" className="text-gray-400 hover:text-brand-black transition-colors text-sm font-medium">Instagram</a>
           </div>
 
           <div className="text-sm text-gray-400">
