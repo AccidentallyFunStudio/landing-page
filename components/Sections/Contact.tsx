@@ -6,14 +6,46 @@ const Contact: React.FC = () => {
   const [formState, setFormState] = useState({ name: '', email: '', whatsapp: '', idea: '' });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+    setErrorMessage(''); // Reset error message
+
+    try {
+      // 1. Buat FormData object (Sesuai metode POST form-data di Worker)
+      const formData = new FormData();
+      formData.append('name', formState.name);
+      formData.append('email', formState.email);
+      // Mapping field React (whatsapp/idea) ke field API (phone/message)
+      formData.append('phone', formState.whatsapp); 
+      formData.append('message', formState.idea);
+
+      // 2. Kirim ke API Worker
+      const response = await fetch('https://frosty-firefly-82d0.shafryyusuf.workers.dev/', {
+        method: 'POST',
+        body: formData,
+        // PENTING: Jangan set header 'Content-Type' secara manual saat pakai FormData.
+        // Browser akan otomatis mengaturnya.
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Gagal mengirim pesan');
+      }
+
+      // 3. Jika Sukses
       setSubmitted(true);
-    }, 1500);
+      setFormState({ name: '', email: '', whatsapp: '', idea: '' }); // Bersihkan form
+      
+    } catch (error) {
+      console.error('Error:', error);
+      setErrorMessage('Terjadi kesalahan saat mengirim pesan. Silakan coba lagi.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -21,6 +53,7 @@ const Contact: React.FC = () => {
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-20">
           
+          {/* Bagian Kiri: Info Kontak */}
           <div className="flex flex-col justify-between">
             <div>
               <h2 className="font-display font-medium text-5xl md:text-6xl mb-8 text-brand-black">
@@ -53,11 +86,12 @@ const Contact: React.FC = () => {
             </div>
           </div>
 
+          {/* Bagian Kanan: Form */}
           <div className="bg-white p-10 rounded-2xl shadow-sm border border-gray-100">
             {submitted ? (
-              <div className="h-full flex flex-col items-center justify-center text-center py-20">
-                <h3 className="font-display font-semibold text-3xl mb-4">Message Sent</h3>
-                <p className="text-gray-500">We'll get back to you shortly.</p>
+              <div className="h-full flex flex-col items-center justify-center text-center py-20 animate-fade-in">
+                <h3 className="font-display font-semibold text-3xl mb-4 text-green-600">Message Sent!</h3>
+                <p className="text-gray-500">We've received your details and will get back to you shortly.</p>
                 <Button variant="outline" className="mt-8" onClick={() => setSubmitted(false)}>
                   Send Another
                 </Button>
@@ -115,6 +149,13 @@ const Contact: React.FC = () => {
                     onChange={(e) => setFormState({...formState, idea: e.target.value})}
                   />
                 </div>
+
+                {/* Pesan Error jika ada */}
+                {errorMessage && (
+                  <div className="text-red-500 text-sm bg-red-50 p-3 rounded-lg">
+                    {errorMessage}
+                  </div>
+                )}
 
                 <Button 
                   type="submit" 
